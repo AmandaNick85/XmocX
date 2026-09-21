@@ -1,0 +1,222 @@
+export const achievements = [
+  {
+    id: 1,
+    gameId: 1,
+    name: 'Primeiro contato',
+    description: 'Complete sua primeira missão em Cyber Rebellion.',
+    points: 10,
+    unlocked: true,
+    icon: 'flash',
+  },
+  {
+    id: 2,
+    gameId: 1,
+    name: 'Explorador',
+    description: 'Explore 10 distritos da megacidade.',
+    points: 25,
+    unlocked: true,
+    icon: 'compass',
+  },
+  {
+    id: 3,
+    gameId: 1,
+    name: 'Mestre da sobrevivência',
+    description: 'Vença um combate contra um boss sem usar cura.',
+    points: 50,
+    unlocked: false,
+    icon: 'shield',
+  },
+  {
+    id: 4,
+    gameId: 1,
+    name: '100%',
+    description: 'Complete todas as missões principais e secundárias.',
+    points: 100,
+    unlocked: false,
+    icon: 'trophy',
+  },
+  {
+    id: 5,
+    gameId: 2,
+    name: 'Sombra',
+    description: 'Finalize uma infiltração sem ser detectado.',
+    points: 20,
+    unlocked: true,
+    icon: 'eye-off',
+  },
+  {
+    id: 6,
+    gameId: 2,
+    name: 'Protocolo quebrado',
+    description: 'Hackeie 15 terminais em uma única operação.',
+    points: 35,
+    unlocked: false,
+    icon: 'code-slash',
+  },
+  {
+    id: 7,
+    gameId: 3,
+    name: 'Largada perfeita',
+    description: 'Vença uma corrida começando em último.',
+    points: 15,
+    unlocked: true,
+    icon: 'speedometer',
+  },
+  {
+    id: 8,
+    gameId: 3,
+    name: 'Liga X',
+    description: 'Alcance o topo da liga Racing X.',
+    points: 80,
+    unlocked: false,
+    icon: 'ribbon',
+  },
+  {
+    id: 9,
+    gameId: 4,
+    name: 'Primeiro abrigo',
+    description: 'Construa seu primeiro refúgio no distrito.',
+    points: 10,
+    unlocked: true,
+    icon: 'home',
+  },
+  {
+    id: 10,
+    gameId: 4,
+    name: 'Noite eterna',
+    description: 'Sobreviva a 20 ondas consecutivas.',
+    points: 60,
+    unlocked: false,
+    icon: 'moon',
+  },
+  {
+    id: 11,
+    gameId: 5,
+    name: 'Drift infinito',
+    description: 'Mantenha um drift por 20 segundos.',
+    points: 20,
+    unlocked: true,
+    icon: 'car-sport',
+  },
+  {
+    id: 12,
+    gameId: 6,
+    name: 'Esquadra unida',
+    description: 'Complete uma operação em equipe sem baixas.',
+    points: 30,
+    unlocked: false,
+    icon: 'people',
+  },
+  {
+    id: 13,
+    gameId: 7,
+    name: 'Órbita estável',
+    description: 'Defenda a estação por 10 minutos.',
+    points: 25,
+    unlocked: true,
+    icon: 'planet',
+  },
+  {
+    id: 14,
+    gameId: 8,
+    name: 'Cristal inicial',
+    description: 'Recupere o primeiro cristal da caverna.',
+    points: 10,
+    unlocked: true,
+    icon: 'diamond',
+  },
+  {
+    id: 15,
+    gameId: 9,
+    name: 'Forjador',
+    description: 'Construa sua primeira forja colossal.',
+    points: 15,
+    unlocked: true,
+    icon: 'hammer',
+  },
+  {
+    id: 16,
+    gameId: 10,
+    name: 'Primeiro mergulho',
+    description: 'Explore as ruínas rasas de Aqua Rift.',
+    points: 10,
+    unlocked: false,
+    icon: 'water',
+  },
+  {
+    id: 17,
+    gameId: 11,
+    name: 'Rota aberta',
+    description: 'Conecte três ilhas flutuantes em uma só rota.',
+    points: 20,
+    unlocked: true,
+    icon: 'airplane',
+  },
+  {
+    id: 18,
+    gameId: 12,
+    name: 'Eco despertado',
+    description: 'Desbloqueie a primeira lenda do grupo.',
+    points: 25,
+    unlocked: true,
+    icon: 'book',
+  },
+  {
+    id: 19,
+    gameId: 13,
+    name: 'Corrida no vazio',
+    description: 'Complete o primeiro corredor sem cair.',
+    points: 15,
+    unlocked: false,
+    icon: 'trail-sign',
+  },
+  {
+    id: 20,
+    gameId: 14,
+    name: 'Contrato noturno',
+    description: 'Aceite e conclua seu primeiro contrato no distrito.',
+    points: 10,
+    unlocked: true,
+    icon: 'moon',
+  },
+  {
+    id: 21,
+    gameId: null,
+    name: 'Primeiro passo',
+    description: 'Complete sua primeira missão em qualquer jogo.',
+    points: 10,
+    unlocked: true,
+    icon: 'flag',
+  },
+  {
+    id: 22,
+    gameId: null,
+    name: 'Mestre',
+    description: 'Complete todas as missões de um título.',
+    points: 100,
+    unlocked: false,
+    icon: 'medal',
+  },
+];
+
+export function getAchievementsByGame(gameId) {
+  return achievements.filter((item) => item.gameId === Number(gameId));
+}
+
+export function searchAchievements(query) {
+  const term = query.trim().toLowerCase();
+  if (!term) return achievements;
+  return achievements.filter(
+    (item) =>
+      item.name.toLowerCase().includes(term) ||
+      item.description.toLowerCase().includes(term)
+  );
+}
+
+export const achievementStats = {
+  gamerscore: achievements
+    .filter((item) => item.unlocked)
+    .reduce((sum, item) => sum + item.points, 0),
+  unlocked: achievements.filter((item) => item.unlocked).length,
+  total: achievements.length,
+};
