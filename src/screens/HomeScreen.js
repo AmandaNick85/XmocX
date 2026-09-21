@@ -21,6 +21,7 @@ export default function HomeScreen({ navigation }) {
   const activeFriends = friends.filter((user) => user.status === 'online');
   const tile = (width - 32 - 16) / 3;
   const libTile = (width - 32 - 8) / 2;
+  const eventCover = Math.round((width - 32 - 36 - 20) / 3);
 
   return (
     <View style={[styles.screen, { backgroundColor: colors.background }]}>
@@ -72,7 +73,7 @@ export default function HomeScreen({ navigation }) {
           <View style={styles.eventArt}>
             <View style={styles.eventCovers}>
               {featured.map((game) => (
-                <View key={game.id} style={styles.eventFrame}>
+                <View key={game.id} style={[styles.eventFrame, { width: eventCover, height: eventCover }]}>
                   <GameCover game={game} style={styles.eventCoverFill} />
                 </View>
               ))}
@@ -194,14 +195,11 @@ const styles = StyleSheet.create({
   },
   eventCovers: {
     flexDirection: 'row',
-    justifyContent: 'center',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    gap: 8,
   },
   eventFrame: {
-    width: 86,
-    height: 86,
-    borderRadius: 8,
+    borderRadius: 10,
     overflow: 'hidden',
     backgroundColor: '#0F0F0F',
   },
