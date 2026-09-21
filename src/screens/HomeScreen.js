@@ -53,7 +53,7 @@ export default function HomeScreen({ navigation }) {
         </View>
 
         <Pressable onPress={() => navigation.navigate('GameDetails', { gameId: featured.id })} style={styles.bannerWrap}>
-          <GameCover game={featured} style={styles.banner} />
+          <GameCover game={featured} showTitle={false} style={styles.banner} />
           <LinearGradient colors={['transparent', 'rgba(0,0,0,0.88)']} style={styles.bannerOverlay}>
             <Text style={styles.bannerLabel}>{featured.bannerLabel}</Text>
             <Text style={styles.bannerTitle}>{featured.title.toUpperCase()}</Text>
@@ -90,7 +90,7 @@ export default function HomeScreen({ navigation }) {
           {spotlight.map((game) => (
             <View key={game.id} style={{ width: width * 0.72 }}>
               <Pressable onPress={() => navigation.navigate('GameDetails', { gameId: game.id })}>
-                <GameCover game={game} style={styles.spotlightCover} />
+                <GameCover game={game} showTitle={false} style={styles.spotlightCover} />
                 <View style={[styles.spotlightBody, { backgroundColor: colors.surface }]}>
                   <Text style={[styles.spotlightTitle, { color: colors.text }]}>{game.title}</Text>
                   <Text style={{ color: colors.textSecondary }}>

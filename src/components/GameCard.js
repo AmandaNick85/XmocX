@@ -12,7 +12,7 @@ export default function GameCard({ game, onPress, width }) {
   return (
     <Pressable onPress={onPress} onPressIn={onPressIn} onPressOut={onPressOut}>
       <Animated.View style={[styles.card, { width: width || 168, backgroundColor: colors.surface, transform: [{ scale }] }]}>
-        <GameCover game={game} style={styles.cover} />
+        <GameCover game={game} showTitle={false} style={styles.cover} />
         <View style={styles.body}>
           <Text numberOfLines={1} style={[styles.title, { color: colors.text }]}>
             {game.title}

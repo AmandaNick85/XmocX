@@ -4,17 +4,24 @@ import { Ionicons } from '@expo/vector-icons';
 
 const PATTERN_ICONS = ['game-controller', 'flash', 'planet', 'rocket', 'diamond', 'hardware-chip'];
 
-export default function GameCover({ game, style, compact = false }) {
+export default function GameCover({ game, style, compact = false, showTitle = true }) {
   const iconName = PATTERN_ICONS[game.id % PATTERN_ICONS.length];
 
   return (
-    <LinearGradient colors={game.coverColors} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={[styles.cover, style]}>
+    <LinearGradient
+      colors={game.coverColors}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={[styles.cover, !showTitle && styles.coverCentered, style]}
+    >
       <View style={styles.orbOne} />
       <View style={[styles.orbTwo, { backgroundColor: game.accent }]} />
       <Ionicons name={iconName} size={compact ? 28 : 42} color="rgba(255,255,255,0.88)" />
-      <Text numberOfLines={2} style={[styles.title, compact && styles.titleCompact]}>
-        {game.title}
-      </Text>
+      {showTitle ? (
+        <Text numberOfLines={2} style={[styles.title, compact && styles.titleCompact]}>
+          {game.title}
+        </Text>
+      ) : null}
     </LinearGradient>
   );
 }
@@ -25,6 +32,10 @@ const styles = StyleSheet.create({
     alignItems: 'flex-start',
     justifyContent: 'flex-end',
     padding: 12,
+  },
+  coverCentered: {
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   orbOne: {
     position: 'absolute',

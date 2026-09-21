@@ -47,6 +47,7 @@ export default function UserProfileScreen({ navigation, route }) {
           <GameHorizontalCard
             key={game.id}
             game={game}
+            wide
             onPress={() => navigation.navigate('GameDetails', { gameId: game.id })}
           />
         ))}

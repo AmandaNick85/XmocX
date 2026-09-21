@@ -4,14 +4,14 @@ import { usePressScale } from '../utils/usePressScale';
 import GameCover from './GameCover';
 import ProgressBar from './ProgressBar';
 
-export default function GameHorizontalCard({ game, onPress }) {
+export default function GameHorizontalCard({ game, onPress, wide = false }) {
   const { colors } = useApp();
   const { scale, onPressIn, onPressOut } = usePressScale();
 
   return (
     <Pressable onPress={onPress} onPressIn={onPressIn} onPressOut={onPressOut}>
-      <Animated.View style={[styles.card, { backgroundColor: colors.surface, transform: [{ scale }] }]}>
-        <GameCover game={game} compact style={styles.cover} />
+      <Animated.View style={[styles.card, wide && styles.wide, { backgroundColor: colors.surface, transform: [{ scale }] }]}>
+        <GameCover game={game} compact showTitle={false} style={styles.cover} />
         <View style={styles.body}>
           <Text numberOfLines={1} style={[styles.title, { color: colors.text }]}>
             {game.title}
@@ -31,6 +31,9 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     overflow: 'hidden',
     flexDirection: 'row',
+  },
+  wide: {
+    width: '100%',
   },
   cover: {
     width: 92,

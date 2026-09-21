@@ -9,13 +9,15 @@ export default function ScreenHeader({ title, onBack, right, subtitle }) {
 
   return (
     <View style={[styles.header, { paddingTop: insets.top + 8, backgroundColor: colors.background }]}>
-      <View style={styles.side}>
-        {onBack ? (
+      {onBack ? (
+        <View style={styles.side}>
           <Pressable onPress={onBack} hitSlop={10} style={[styles.iconButton, { backgroundColor: colors.surfaceAlt }]}>
             <Ionicons name="chevron-back" size={22} color={colors.text} />
           </Pressable>
-        ) : null}
-      </View>
+        </View>
+      ) : (
+        <View style={styles.side} />
+      )}
       <View style={styles.center}>
         <Text style={[styles.title, { color: colors.text }]}>{title}</Text>
         {subtitle ? <Text style={[styles.subtitle, { color: colors.textSecondary }]}>{subtitle}</Text> : null}

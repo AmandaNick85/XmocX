@@ -19,7 +19,7 @@ export default function GameDetailsScreen({ navigation, route }) {
     <View style={[styles.screen, { backgroundColor: colors.background }]}>
       <ScreenHeader title={game.title} onBack={() => navigation.goBack()} />
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <GameCover game={game} style={styles.cover} />
+        <GameCover game={game} showTitle={false} style={styles.cover} />
         <Text style={[styles.title, { color: colors.text }]}>{game.title}</Text>
         <Text style={[styles.meta, { color: colors.textSecondary }]}>
           {game.genre} · {game.developer} · {game.size}
