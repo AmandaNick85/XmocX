@@ -1,132 +1,123 @@
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { activities } from '../data/activities';
-import { currentUser } from '../data/users';
+import { currentUser, friends } from '../data/users';
 import { useApp } from '../context/AppContext';
-import ActivityCard from '../components/ActivityCard';
-import GameCard from '../components/GameCard';
+import AppHeader from '../components/AppHeader';
+import CoverTile from '../components/CoverTile';
 import GameCover from '../components/GameCover';
-import GameHorizontalCard from '../components/GameHorizontalCard';
-import PrimaryButton from '../components/PrimaryButton';
+import SearchBar from '../components/SearchBar';
 import SectionHeader from '../components/SectionHeader';
 import UserAvatar from '../components/UserAvatar';
 
 export default function HomeScreen({ navigation }) {
-  const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
   const { colors, games } = useApp();
-  const featured = games.find((game) => game.id === 1) || games[0];
+  const featured = games.filter((game) => game.featured).slice(0, 3);
+  const hero = featured[0] || games[0];
   const continuePlaying = games.filter((game) => game.inContinue);
-  const spotlight = games.filter((game) => game.featured && game.id !== featured.id);
-  const recommended = games.filter((game) => game.recommended);
-  const friendActivity = activities.slice(0, 5);
-  const cardWidth = Math.min(188, width * 0.46);
+  const recent = games.filter((game) => game.recommended).slice(0, 8);
+  const activeFriends = friends.filter((user) => user.status === 'online');
+  const tile = (width - 32 - 16) / 3;
+  const libTile = (width - 32 - 8) / 2;
 
   return (
     <View style={[styles.screen, { backgroundColor: colors.background }]}>
+      <LinearGradient colors={['#1A3A18', '#111111']} style={styles.glow} />
       <ScrollView contentContainerStyle={{ paddingBottom: 28 }} showsVerticalScrollIndicator={false}>
-        <View style={[styles.header, { paddingTop: insets.top + 8 }]}>
-          <View>
-            <Text style={[styles.brand, { color: colors.accent }]}>XmocX</Text>
-            <Text style={[styles.welcome, { color: colors.textSecondary }]}>Olá, {currentUser.name}</Text>
-          </View>
-          <View style={styles.headerActions}>
-            <Pressable
-              onPress={() => navigation.navigate('Search')}
-              style={[styles.iconButton, { backgroundColor: colors.surfaceAlt }]}
-            >
-              <Ionicons name="search" size={18} color={colors.text} />
-            </Pressable>
-            <Pressable
-              onPress={() => navigation.navigate('Notifications')}
-              style={[styles.iconButton, { backgroundColor: colors.surfaceAlt }]}
-            >
-              <Ionicons name="notifications-outline" size={18} color={colors.text} />
-              <View style={[styles.badge, { backgroundColor: colors.accent }]} />
-            </Pressable>
-            <Pressable onPress={() => navigation.navigate('Profile')}>
-              <UserAvatar user={currentUser} size={38} showStatus />
-            </Pressable>
-          </View>
+        <AppHeader
+          user={currentUser}
+          title={currentUser.name}
+          onAvatar={() => navigation.navigate('Profile')}
+          subtitle={
+            <>
+              <View style={styles.metaItem}>
+                <Text style={[styles.gIcon, { color: colors.accent }]}>G</Text>
+                <Text style={[styles.metaText, { color: colors.textSecondary }]}>
+                  {currentUser.gamerscore.toLocaleString('pt-BR')}
+                </Text>
+              </View>
+              <View style={styles.metaItem}>
+                <Ionicons name="gift-outline" size={14} color={colors.accent} />
+                <Text style={[styles.metaText, { color: colors.textSecondary }]}>
+                  {currentUser.rewards.toLocaleString('pt-BR')}
+                </Text>
+              </View>
+            </>
+          }
+          right={
+            <>
+              <Pressable style={styles.iconBtn} onPress={() => navigation.navigate('Search')}>
+                <Ionicons name="tablet-landscape-outline" size={20} color={colors.text} />
+              </Pressable>
+              <Pressable style={styles.iconBtn} onPress={() => navigation.navigate('Notifications')}>
+                <Ionicons name="notifications-outline" size={20} color={colors.text} />
+                <View style={[styles.badge, { backgroundColor: colors.accent }]}>
+                  <Text style={styles.badgeText}>2</Text>
+                </View>
+              </Pressable>
+            </>
+          }
+        />
+
+        <View style={styles.searchWrap}>
+          <SearchBar onPress={() => navigation.navigate('Search')} />
         </View>
 
-        <Pressable onPress={() => navigation.navigate('GameDetails', { gameId: featured.id })} style={styles.bannerWrap}>
-          <GameCover game={featured} showTitle={false} style={styles.banner} />
-          <LinearGradient colors={['transparent', 'rgba(0,0,0,0.88)']} style={styles.bannerOverlay}>
-            <Text style={styles.bannerLabel}>{featured.bannerLabel}</Text>
-            <Text style={styles.bannerTitle}>{featured.title.toUpperCase()}</Text>
-            <Text style={styles.bannerTagline}>{featured.tagline}</Text>
-            <View style={styles.bannerButtons}>
-              <PrimaryButton
-                label="JOGAR"
-                onPress={() => navigation.navigate('GameDetails', { gameId: featured.id })}
-                style={{ flex: 1 }}
-              />
-              <PrimaryButton
-                label="+ LISTA"
-                variant="outline"
-                onPress={() => navigation.navigate('GameDetails', { gameId: featured.id })}
-                style={{ flex: 1 }}
-              />
+        <Pressable
+          onPress={() => navigation.navigate('GameDetails', { gameId: hero.id })}
+          style={styles.eventCard}
+        >
+          <LinearGradient colors={['#D7E3C4', '#8FA87A', '#2A3A22']} style={styles.eventArt}>
+            <Text style={styles.eventMark}>XmocX</Text>
+            <View style={styles.eventCovers}>
+              {featured.map((game) => (
+                <GameCover key={game.id} game={game} compact style={styles.eventCover} />
+              ))}
             </View>
           </LinearGradient>
+          <View style={[styles.eventBody, { backgroundColor: 'rgba(20,20,20,0.55)' }]}>
+            <Text style={styles.eventTitle}>Destaques da semana</Text>
+            <Text style={styles.eventSub}>Veja os jogos</Text>
+          </View>
         </Pressable>
+
+        <SectionHeader title="Amigos ativos" actionLabel="Ver tudo" onAction={() => navigation.navigate('Community')} />
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.friendsRow}>
+          {activeFriends.map((user) => (
+            <Pressable
+              key={user.id}
+              style={styles.friend}
+              onPress={() => navigation.navigate('UserProfile', { userId: user.id })}
+            >
+              <UserAvatar user={user} size={74} showStar={user.favorite} />
+              <Text numberOfLines={1} style={[styles.friendName, { color: colors.text }]}>
+                {user.name}
+              </Text>
+            </Pressable>
+          ))}
+        </ScrollView>
 
         <SectionHeader title="Continuar jogando" actionLabel="Ver tudo" onAction={() => navigation.navigate('Library')} />
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.hList}>
           {continuePlaying.map((game) => (
-            <GameHorizontalCard
+            <CoverTile
               key={game.id}
               game={game}
+              width={tile}
               onPress={() => navigation.navigate('GameDetails', { gameId: game.id })}
             />
           ))}
         </ScrollView>
 
-        <SectionHeader title="Em destaque" />
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.hList}>
-          {spotlight.map((game) => (
-            <View key={game.id} style={{ width: width * 0.72 }}>
-              <Pressable onPress={() => navigation.navigate('GameDetails', { gameId: game.id })}>
-                <GameCover game={game} showTitle={false} style={styles.spotlightCover} />
-                <View style={[styles.spotlightBody, { backgroundColor: colors.surface }]}>
-                  <Text style={[styles.spotlightTitle, { color: colors.text }]}>{game.title}</Text>
-                  <Text style={{ color: colors.textSecondary }}>
-                    {game.genre} · {game.rating.toFixed(1)}
-                  </Text>
-                  <PrimaryButton
-                    label="Ver detalhes"
-                    variant="outline"
-                    onPress={() => navigation.navigate('GameDetails', { gameId: game.id })}
-                  />
-                </View>
-              </Pressable>
-            </View>
-          ))}
-        </ScrollView>
-
-        <SectionHeader title="Recomendados para você" />
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.hList}>
-          {recommended.map((game) => (
-            <GameCard
+        <SectionHeader title="Adicionados recentemente" actionLabel="Ver tudo" onAction={() => navigation.navigate('Library')} />
+        <View style={styles.grid}>
+          {recent.slice(0, 4).map((game) => (
+            <CoverTile
               key={game.id}
               game={game}
-              width={cardWidth}
+              width={libTile}
               onPress={() => navigation.navigate('GameDetails', { gameId: game.id })}
-            />
-          ))}
-        </ScrollView>
-
-        <SectionHeader title="Atividade dos amigos" actionLabel="Comunidade" onAction={() => navigation.navigate('Community')} />
-        <View style={styles.feed}>
-          {friendActivity.map((activity) => (
-            <ActivityCard
-              key={activity.id}
-              activity={activity}
-              onPressUser={(user) => navigation.navigate('UserProfile', { userId: user.id })}
-              onPressGame={(game) => navigation.navigate('GameDetails', { gameId: game.id })}
             />
           ))}
         </View>
@@ -139,100 +130,120 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
   },
-  header: {
-    paddingHorizontal: 16,
-    paddingBottom: 12,
+  glow: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 220,
+  },
+  metaItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    gap: 4,
   },
-  brand: {
-    fontSize: 28,
-    fontWeight: '900',
-    letterSpacing: 0.6,
+  gIcon: {
+    fontSize: 13,
+    fontWeight: '800',
   },
-  welcome: {
-    marginTop: 2,
+  metaText: {
     fontSize: 13,
   },
-  headerActions: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8,
-  },
-  iconButton: {
+  iconBtn: {
     width: 38,
     height: 38,
     borderRadius: 19,
+    backgroundColor: 'rgba(255,255,255,0.08)',
     alignItems: 'center',
     justifyContent: 'center',
   },
   badge: {
     position: 'absolute',
-    top: 8,
-    right: 8,
-    width: 8,
-    height: 8,
-    borderRadius: 4,
+    top: 2,
+    right: 2,
+    minWidth: 16,
+    height: 16,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 3,
   },
-  bannerWrap: {
+  badgeText: {
+    color: '#111',
+    fontSize: 10,
+    fontWeight: '800',
+  },
+  searchWrap: {
+    paddingHorizontal: 16,
+    marginBottom: 16,
+  },
+  eventCard: {
     marginHorizontal: 16,
     marginBottom: 24,
-    borderRadius: 24,
+    borderRadius: 18,
     overflow: 'hidden',
   },
-  banner: {
-    height: 280,
-  },
-  bannerOverlay: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: 'flex-end',
+  eventArt: {
+    height: 250,
     padding: 18,
+    justifyContent: 'space-between',
   },
-  bannerLabel: {
-    color: '#8BF000',
-    fontSize: 12,
-    fontWeight: '800',
-    letterSpacing: 1.2,
-  },
-  bannerTitle: {
-    marginTop: 6,
-    color: '#FFFFFF',
-    fontSize: 28,
+  eventMark: {
+    alignSelf: 'center',
+    marginTop: 8,
+    color: '#24351A',
+    fontSize: 42,
     fontWeight: '900',
+    letterSpacing: 1,
   },
-  bannerTagline: {
-    marginTop: 4,
-    marginBottom: 14,
-    color: '#B3B3B3',
+  eventCovers: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: 8,
+  },
+  eventCover: {
+    width: 86,
+    height: 86,
+    borderRadius: 8,
+  },
+  eventBody: {
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+  },
+  eventTitle: {
+    color: '#FFFFFF',
+    fontSize: 22,
+    fontWeight: '700',
+  },
+  eventSub: {
+    marginTop: 2,
+    color: '#D0D0D0',
     fontSize: 14,
   },
-  bannerButtons: {
-    flexDirection: 'row',
-    gap: 10,
+  friendsRow: {
+    paddingHorizontal: 16,
+    paddingBottom: 22,
+    gap: 16,
+  },
+  friend: {
+    width: 86,
+    alignItems: 'center',
+    gap: 8,
+  },
+  friendName: {
+    fontSize: 12,
+    fontWeight: '600',
   },
   hList: {
     paddingHorizontal: 16,
-    paddingBottom: 24,
-    gap: 12,
-  },
-  spotlightCover: {
-    height: 180,
-    borderTopLeftRadius: 18,
-    borderTopRightRadius: 18,
-  },
-  spotlightBody: {
+    paddingBottom: 22,
     gap: 8,
-    padding: 14,
-    borderBottomLeftRadius: 18,
-    borderBottomRightRadius: 18,
   },
-  spotlightTitle: {
-    fontSize: 18,
-    fontWeight: '800',
-  },
-  feed: {
+  grid: {
     paddingHorizontal: 16,
-    gap: 12,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    rowGap: 8,
   },
 });

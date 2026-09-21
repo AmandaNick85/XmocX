@@ -1,26 +1,31 @@
 import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { currentUser } from '../data/users';
 import { achievements, achievementStats } from '../data/achievements';
 import { useApp } from '../context/AppContext';
 import AchievementCard from '../components/AchievementCard';
+import AppHeader from '../components/AppHeader';
 import ProgressBar from '../components/ProgressBar';
-import ScreenHeader from '../components/ScreenHeader';
 
-export default function AchievementsScreen() {
+export default function AchievementsScreen({ navigation }) {
   const { colors } = useApp();
   const completed = Math.round((achievementStats.unlocked / achievementStats.total) * 100);
 
   return (
     <View style={[styles.screen, { backgroundColor: colors.background }]}>
-      <ScreenHeader title="Conquistas" />
+      <AppHeader
+        user={currentUser}
+        title="Conquistas"
+        onAvatar={() => navigation.navigate('Profile')}
+      />
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.statsRow}>
-          <StatBox label="Gamerscore" value={String(achievementStats.gamerscore)} colors={colors} />
+          <StatBox label="Gamerscore" value={`${achievementStats.gamerscore} G`} colors={colors} />
           <StatBox label="Conquistas" value={String(achievementStats.unlocked)} colors={colors} />
           <StatBox label="Completado" value={`${completed}%`} colors={colors} />
         </View>
-        <ProgressBar progress={completed} height={8} />
-        <Text style={[styles.helper, { color: colors.textSecondary }]}>
-          {achievementStats.unlocked} de {achievementStats.total} conquistas desbloqueadas
+        <ProgressBar progress={completed} height={6} />
+        <Text style={[styles.helper, { color: colors.textMuted }]}>
+          {achievementStats.unlocked} de {achievementStats.total} desbloqueadas
         </Text>
         {achievements.map((achievement) => (
           <AchievementCard key={achievement.id} achievement={achievement} />
@@ -32,9 +37,9 @@ export default function AchievementsScreen() {
 
 function StatBox({ label, value, colors }) {
   return (
-    <View style={[styles.statBox, { backgroundColor: colors.surface }]}>
-      <Text style={[styles.statValue, { color: colors.accent }]}>{value}</Text>
-      <Text style={[styles.statLabel, { color: colors.textSecondary }]}>{label}</Text>
+    <View style={styles.statBox}>
+      <Text style={[styles.statValue, { color: colors.text }]}>{value}</Text>
+      <Text style={[styles.statLabel, { color: colors.textMuted }]}>{label}</Text>
     </View>
   );
 }
@@ -50,17 +55,14 @@ const styles = StyleSheet.create({
   },
   statsRow: {
     flexDirection: 'row',
-    gap: 10,
   },
   statBox: {
     flex: 1,
-    borderRadius: 16,
-    paddingVertical: 14,
     alignItems: 'center',
   },
   statValue: {
-    fontSize: 22,
-    fontWeight: '900',
+    fontSize: 20,
+    fontWeight: '700',
   },
   statLabel: {
     marginTop: 4,

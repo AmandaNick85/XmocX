@@ -1,16 +1,19 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
 import { getGameById } from '../data/games';
 import { getUserById } from '../data/users';
 import { useApp } from '../context/AppContext';
-import GameHorizontalCard from '../components/GameHorizontalCard';
+import CoverTile from '../components/CoverTile';
 import ScreenHeader from '../components/ScreenHeader';
 import UserAvatar from '../components/UserAvatar';
 
 export default function UserProfileScreen({ navigation, route }) {
+  const { width } = useWindowDimensions();
   const { colors, games } = useApp();
   const user = getUserById(route.params.userId);
   const currentGame = user?.currentGameId ? getGameById(user.currentGameId) : null;
-  const recent = games.slice(0, 3);
+  const recent = games.slice(0, 4);
+  const tile = (width - 32 - 8) / 2;
 
   if (!user) {
     return (
@@ -25,42 +28,40 @@ export default function UserProfileScreen({ navigation, route }) {
     <View style={[styles.screen, { backgroundColor: colors.background }]}>
       <ScreenHeader title={user.name} onBack={() => navigation.goBack()} />
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <View style={[styles.hero, { backgroundColor: colors.surface }]}>
-          <UserAvatar user={user} size={84} showStatus />
-          <Text style={[styles.name, { color: colors.text }]}>{user.name}</Text>
-          <Text style={{ color: colors.textSecondary }}>@{user.handle}</Text>
-          <Text style={[styles.status, { color: user.status === 'online' ? colors.online : colors.textMuted }]}>
-            {user.status === 'online'
-              ? currentGame
-                ? `Jogando ${currentGame.title}`
-                : 'Online'
-              : user.lastSeen || 'Offline'}
+        <LinearGradient colors={user.avatarColors} style={styles.hero}>
+          <UserAvatar user={user} size={88} showStar={user.favorite} />
+          <Text style={styles.name}>{user.name}</Text>
+          {user.realName ? <Text style={styles.real}>{user.realName}</Text> : null}
+          <Text style={styles.status}>
+            {currentGame ? `Jogando ${currentGame.title}` : user.lastSeen || 'Offline'}
           </Text>
-        </View>
-        <View style={styles.statsRow}>
-          <MiniStat label="Gamerscore" value={user.gamerscore} colors={colors} />
-          <MiniStat label="Nível" value={user.level} colors={colors} />
-          <MiniStat label="Amigos" value={user.friendsCount} colors={colors} />
+        </LinearGradient>
+        <View style={styles.followRow}>
+          <MiniStat label="Gamerscore" value={`${user.gamerscore} G`} />
+          <MiniStat label="Amigos" value={user.friendsCount} />
+          <MiniStat label="Nível" value={user.level} />
         </View>
         <Text style={[styles.section, { color: colors.text }]}>Jogos recentes</Text>
-        {recent.map((game) => (
-          <GameHorizontalCard
-            key={game.id}
-            game={game}
-            wide
-            onPress={() => navigation.navigate('GameDetails', { gameId: game.id })}
-          />
-        ))}
+        <View style={styles.grid}>
+          {recent.map((game) => (
+            <CoverTile
+              key={game.id}
+              game={game}
+              width={tile}
+              onPress={() => navigation.navigate('GameDetails', { gameId: game.id })}
+            />
+          ))}
+        </View>
       </ScrollView>
     </View>
   );
 }
 
-function MiniStat({ label, value, colors }) {
+function MiniStat({ label, value }) {
   return (
-    <View style={[styles.stat, { backgroundColor: colors.surface }]}>
-      <Text style={[styles.statValue, { color: colors.text }]}>{value}</Text>
-      <Text style={[styles.statLabel, { color: colors.textSecondary }]}>{label}</Text>
+    <View style={styles.stat}>
+      <Text style={styles.statValue}>{value}</Text>
+      <Text style={styles.statLabel}>{label}</Text>
     </View>
   );
 }
@@ -70,44 +71,57 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
-    padding: 16,
-    gap: 12,
+    paddingBottom: 28,
   },
   hero: {
-    borderRadius: 22,
+    marginHorizontal: 16,
+    borderRadius: 16,
     padding: 18,
     alignItems: 'center',
     gap: 6,
   },
   name: {
-    fontSize: 26,
-    fontWeight: '900',
-  },
-  status: {
-    marginTop: 4,
-    fontSize: 13,
+    color: '#FFF',
+    fontSize: 24,
     fontWeight: '700',
   },
-  statsRow: {
+  real: {
+    color: '#DDD',
+    fontSize: 14,
+  },
+  status: {
+    color: '#EEE',
+    fontSize: 13,
+  },
+  followRow: {
+    paddingVertical: 16,
     flexDirection: 'row',
-    gap: 8,
   },
   stat: {
     flex: 1,
-    borderRadius: 16,
-    paddingVertical: 12,
     alignItems: 'center',
   },
   statValue: {
+    color: '#FFF',
     fontSize: 18,
-    fontWeight: '800',
+    fontWeight: '700',
   },
   statLabel: {
-    marginTop: 4,
-    fontSize: 11,
+    marginTop: 2,
+    color: '#B3B3B3',
+    fontSize: 12,
   },
   section: {
+    paddingHorizontal: 16,
+    marginBottom: 10,
     fontSize: 18,
-    fontWeight: '800',
+    fontWeight: '700',
+  },
+  grid: {
+    paddingHorizontal: 16,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    rowGap: 8,
   },
 });

@@ -9,7 +9,7 @@ export default function SectionHeader({ title, actionLabel, onAction }) {
       <Text style={[styles.title, { color: colors.text }]}>{title}</Text>
       {actionLabel ? (
         <Pressable onPress={onAction} hitSlop={8}>
-          <Text style={[styles.action, { color: colors.textSecondary }]}>{actionLabel}</Text>
+          <Text style={[styles.action, { color: colors.textMuted }]}>{actionLabel}</Text>
         </Pressable>
       ) : null}
     </View>
@@ -26,10 +26,10 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 20,
-    fontWeight: '800',
+    fontWeight: '700',
   },
   action: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: '500',
   },
 });

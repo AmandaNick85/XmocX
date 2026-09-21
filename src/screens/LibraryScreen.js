@@ -1,42 +1,48 @@
 import { useMemo, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View } from 'react-native';
+import { ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
+import { currentUser } from '../data/users';
 import { useApp } from '../context/AppContext';
+import AppHeader from '../components/AppHeader';
+import CoverTile from '../components/CoverTile';
 import FilterChips from '../components/FilterChips';
-import GameCard from '../components/GameCard';
-import ScreenHeader from '../components/ScreenHeader';
+import TextTabs from '../components/TextTabs';
 
-const FILTERS = ['Todos', 'Instalados', 'Recentes', 'Favoritos'];
+const TABS = ['Jogos', 'Capturas', 'Lista de desejos'];
+const FILTERS = ['Classificar', 'Filtros'];
 
 export default function LibraryScreen({ navigation }) {
+  const { width } = useWindowDimensions();
   const { colors, games } = useApp();
-  const [filter, setFilter] = useState('Todos');
+  const [tab, setTab] = useState('Jogos');
+  const [chip, setChip] = useState('Classificar');
+  const tile = (width - 32 - 8) / 2;
 
   const filtered = useMemo(() => {
-    if (filter === 'Instalados') return games.filter((game) => game.installed);
-    if (filter === 'Recentes') {
-      return [...games].sort((a, b) => b.hoursPlayed - a.hoursPlayed).slice(0, 8);
-    }
-    if (filter === 'Favoritos') return games.filter((game) => game.favorite);
+    if (tab === 'Lista de desejos') return games.filter((game) => game.inList);
+    if (tab === 'Capturas') return [];
+    if (chip === 'Filtros') return games.filter((game) => game.installed);
     return games;
-  }, [filter, games]);
+  }, [chip, games, tab]);
 
   return (
     <View style={[styles.screen, { backgroundColor: colors.background }]}>
-      <ScreenHeader title="Minha Biblioteca" subtitle={`${filtered.length} jogos`} />
-      <FilterChips options={FILTERS} selected={filter} onSelect={setFilter} />
+      <AppHeader user={currentUser} title="Minha Biblioteca" onAvatar={() => navigation.navigate('Profile')} />
+      <TextTabs options={TABS} selected={tab} onSelect={setTab} />
+      <View style={{ height: 8 }} />
+      <FilterChips options={FILTERS} selected={chip} onSelect={setChip} />
+      <Text style={[styles.count, { color: colors.text }]}>{filtered.length} jogos</Text>
       <ScrollView contentContainerStyle={styles.grid} showsVerticalScrollIndicator={false}>
         {filtered.map((game) => (
-          <View key={game.id} style={styles.item}>
-            <GameCard
-              game={game}
-              width="100%"
-              onPress={() => navigation.navigate('GameDetails', { gameId: game.id })}
-            />
-            <Text style={[styles.status, { color: colors.textMuted }]}>
-              {game.installed ? 'Instalado' : 'Na nuvem'} · {game.progress}%
-            </Text>
-          </View>
+          <CoverTile
+            key={game.id}
+            game={game}
+            width={tile}
+            onPress={() => navigation.navigate('GameDetails', { gameId: game.id })}
+          />
         ))}
+        {filtered.length === 0 ? (
+          <Text style={[styles.empty, { color: colors.textMuted }]}>Nada por aqui ainda.</Text>
+        ) : null}
       </ScrollView>
     </View>
   );
@@ -46,20 +52,24 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
   },
+  count: {
+    paddingHorizontal: 16,
+    paddingTop: 14,
+    paddingBottom: 10,
+    fontSize: 18,
+    fontWeight: '700',
+  },
   grid: {
     paddingHorizontal: 16,
-    paddingTop: 12,
     paddingBottom: 24,
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
+    rowGap: 8,
   },
-  item: {
-    width: '48%',
-    marginBottom: 14,
-  },
-  status: {
-    marginTop: 6,
-    fontSize: 12,
+  empty: {
+    width: '100%',
+    textAlign: 'center',
+    marginTop: 24,
   },
 });

@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 const PATTERN_ICONS = ['game-controller', 'flash', 'planet', 'rocket', 'diamond', 'hardware-chip'];
 
-export default function GameCover({ game, style, compact = false, showTitle = true }) {
+export default function GameCover({ game, style, compact = false, showTitle = false }) {
   const iconName = PATTERN_ICONS[game.id % PATTERN_ICONS.length];
 
   return (
@@ -12,16 +12,18 @@ export default function GameCover({ game, style, compact = false, showTitle = tr
       colors={game.coverColors}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
-      style={[styles.cover, !showTitle && styles.coverCentered, style]}
+      style={[styles.cover, style]}
     >
       <View style={styles.orbOne} />
       <View style={[styles.orbTwo, { backgroundColor: game.accent }]} />
-      <Ionicons name={iconName} size={compact ? 28 : 42} color="rgba(255,255,255,0.88)" />
-      {showTitle ? (
-        <Text numberOfLines={2} style={[styles.title, compact && styles.titleCompact]}>
-          {game.title}
-        </Text>
-      ) : null}
+      <View style={styles.center}>
+        <Ionicons name={iconName} size={compact ? 22 : 36} color="rgba(255,255,255,0.92)" />
+        {showTitle ? (
+          <Text numberOfLines={2} style={[styles.title, compact && styles.titleCompact]}>
+            {game.title}
+          </Text>
+        ) : null}
+      </View>
     </LinearGradient>
   );
 }
@@ -29,41 +31,41 @@ export default function GameCover({ game, style, compact = false, showTitle = tr
 const styles = StyleSheet.create({
   cover: {
     overflow: 'hidden',
-    alignItems: 'flex-start',
     justifyContent: 'flex-end',
-    padding: 12,
   },
-  coverCentered: {
+  center: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
+    padding: 10,
   },
   orbOne: {
     position: 'absolute',
-    width: 120,
-    height: 120,
-    borderRadius: 60,
+    width: 140,
+    height: 140,
+    borderRadius: 70,
     backgroundColor: 'rgba(255,255,255,0.08)',
-    top: -30,
-    right: -20,
+    top: -40,
+    right: -24,
   },
   orbTwo: {
     position: 'absolute',
-    width: 70,
-    height: 70,
-    borderRadius: 35,
-    opacity: 0.35,
-    top: 24,
-    left: 18,
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    opacity: 0.28,
+    bottom: -16,
+    left: -10,
   },
   title: {
-    marginTop: 10,
+    marginTop: 8,
     color: '#FFFFFF',
-    fontSize: 16,
+    fontSize: 13,
     fontWeight: '800',
-    letterSpacing: 0.2,
+    textAlign: 'center',
   },
   titleCompact: {
-    fontSize: 13,
-    marginTop: 6,
+    fontSize: 11,
+    marginTop: 4,
   },
 });

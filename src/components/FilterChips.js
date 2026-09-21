@@ -1,7 +1,8 @@
-import { Pressable, ScrollView, StyleSheet, Text } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useApp } from '../context/AppContext';
 
-export default function FilterChips({ options, selected, onSelect }) {
+export default function FilterChips({ options, selected, onSelect, showChevron = true }) {
   const { colors } = useApp();
 
   return (
@@ -20,11 +21,13 @@ export default function FilterChips({ options, selected, onSelect }) {
             style={[
               styles.chip,
               {
-                backgroundColor: active ? colors.accent : colors.surfaceAlt,
+                backgroundColor: active ? colors.surfaceHover : 'transparent',
+                borderColor: colors.surfaceHover,
               },
             ]}
           >
-            <Text style={[styles.label, { color: active ? '#0B0B0B' : colors.text }]}>{option}</Text>
+            <Text style={[styles.label, { color: colors.text }]}>{option}</Text>
+            {showChevron ? <Ionicons name="chevron-down" size={14} color={colors.textMuted} /> : null}
           </Pressable>
         );
       })}
@@ -36,7 +39,6 @@ const styles = StyleSheet.create({
   scroller: {
     flexGrow: 0,
     minHeight: 44,
-    marginBottom: 4,
   },
   row: {
     paddingHorizontal: 16,
@@ -48,10 +50,13 @@ const styles = StyleSheet.create({
     borderRadius: 999,
     paddingHorizontal: 14,
     paddingVertical: 8,
-    justifyContent: 'center',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    borderWidth: 1,
   },
   label: {
-    fontSize: 13,
-    fontWeight: '700',
+    fontSize: 14,
+    fontWeight: '600',
   },
 });

@@ -5,8 +5,8 @@ import { searchGames } from '../data/games';
 import { searchUsers } from '../data/users';
 import { useApp } from '../context/AppContext';
 import AchievementCard from '../components/AchievementCard';
+import CoverTile from '../components/CoverTile';
 import FilterChips from '../components/FilterChips';
-import GameCard from '../components/GameCard';
 import ScreenHeader from '../components/ScreenHeader';
 import SearchBar from '../components/SearchBar';
 import UserAvatar from '../components/UserAvatar';
@@ -36,14 +36,14 @@ export default function SearchScreen({ navigation }) {
       <View style={styles.searchWrap}>
         <SearchBar value={query} onChangeText={setQuery} autoFocus />
       </View>
-      <FilterChips options={FILTERS} selected={filter} onSelect={setFilter} />
+      <FilterChips options={FILTERS} selected={filter} onSelect={setFilter} showChevron={false} />
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         {showGames ? (
           <View style={styles.section}>
             <Text style={[styles.sectionTitle, { color: colors.text }]}>Jogos</Text>
             <View style={styles.gameGrid}>
               {gameResults.map((game) => (
-                <GameCard
+                <CoverTile
                   key={game.id}
                   game={game}
                   width="48%"
@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    gap: 10,
+    rowGap: 8,
   },
   userRow: {
     borderRadius: 16,

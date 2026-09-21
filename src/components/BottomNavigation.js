@@ -6,10 +6,10 @@ import { useApp } from '../context/AppContext';
 
 const ICONS = {
   Home: ['home-outline', 'home'],
-  Library: ['library-outline', 'library'],
   Community: ['people-outline', 'people'],
+  Library: ['library-outline', 'library'],
   Achievements: ['trophy-outline', 'trophy'],
-  Profile: ['person-outline', 'person'],
+  Profile: ['person-circle-outline', 'person-circle'],
 };
 
 export default function BottomNavigation({ state, descriptors, navigation }) {
@@ -21,9 +21,8 @@ export default function BottomNavigation({ state, descriptors, navigation }) {
       style={[
         styles.bar,
         {
-          backgroundColor: colors.surface,
-          borderTopColor: colors.border,
-          paddingBottom: Math.max(insets.bottom, 8),
+          backgroundColor: '#0A0A0A',
+          paddingBottom: Math.max(insets.bottom, 6),
         },
       ]}
     >
@@ -60,22 +59,24 @@ export default function BottomNavigation({ state, descriptors, navigation }) {
 }
 
 function TabItem({ focused, label, icon, colors, onPress }) {
-  const scale = useRef(new Animated.Value(focused ? 1 : 0.94)).current;
+  const scale = useRef(new Animated.Value(focused ? 1 : 0.96)).current;
 
   useEffect(() => {
     Animated.spring(scale, {
-      toValue: focused ? 1 : 0.94,
+      toValue: focused ? 1 : 0.96,
       useNativeDriver: true,
       speed: 22,
-      bounciness: 8,
+      bounciness: 6,
     }).start();
   }, [focused, scale]);
+
+  const color = focused ? colors.tabActive : colors.tabInactive;
 
   return (
     <Pressable onPress={onPress} style={styles.item}>
       <Animated.View style={{ transform: [{ scale }], alignItems: 'center' }}>
-        <Ionicons name={icon} size={22} color={focused ? colors.accent : colors.textMuted} />
-        <Text style={[styles.label, { color: focused ? colors.accent : colors.textMuted }]}>{label}</Text>
+        <Ionicons name={icon} size={24} color={color} />
+        <Text style={[styles.label, { color }]}>{label}</Text>
       </Animated.View>
     </Pressable>
   );
@@ -83,7 +84,6 @@ function TabItem({ focused, label, icon, colors, onPress }) {
 
 const styles = StyleSheet.create({
   bar: {
-    borderTopWidth: 1,
     paddingTop: 8,
     flexDirection: 'row',
   },
@@ -93,8 +93,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   label: {
-    marginTop: 4,
-    fontSize: 11,
-    fontWeight: '700',
+    marginTop: 3,
+    fontSize: 10,
+    fontWeight: '600',
   },
 });

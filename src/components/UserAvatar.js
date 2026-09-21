@@ -1,8 +1,9 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { StyleSheet, Text, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useApp } from '../context/AppContext';
 
-export default function UserAvatar({ user, size = 48, showStatus = false }) {
+export default function UserAvatar({ user, size = 48, showStatus = false, showStar = false }) {
   const { colors } = useApp();
   const statusColor =
     user?.status === 'online' ? colors.online : user?.status === 'away' ? colors.away : colors.offline;
@@ -15,7 +16,11 @@ export default function UserAvatar({ user, size = 48, showStatus = false }) {
       >
         <Text style={[styles.initials, { fontSize: size * 0.34 }]}>{user?.initials || 'XM'}</Text>
       </LinearGradient>
-      {showStatus ? (
+      {showStar ? (
+        <View style={[styles.star, { backgroundColor: colors.background }]}>
+          <Ionicons name="star" size={size * 0.28} color={colors.accent} />
+        </View>
+      ) : showStatus ? (
         <View
           style={[
             styles.status,
@@ -47,5 +52,11 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     borderWidth: 2,
+  },
+  star: {
+    position: 'absolute',
+    left: -2,
+    bottom: -2,
+    borderRadius: 99,
   },
 });

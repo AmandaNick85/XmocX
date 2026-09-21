@@ -27,8 +27,8 @@ export default function PrimaryButton({ label, onPress, variant = 'solid', style
 
 const styles = StyleSheet.create({
   button: {
-    minHeight: 46,
-    borderRadius: 14,
+    minHeight: 44,
+    borderRadius: 8,
     borderWidth: 1,
     alignItems: 'center',
     justifyContent: 'center',
