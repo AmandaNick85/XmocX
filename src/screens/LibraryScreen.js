@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { ScrollView, StyleSheet, Text, View, useWindowDimensions } from 'react-native';
+import { ScrollView, StyleSheet, Text, View } from 'react-native';
 import { useApp } from '../context/AppContext';
 import FilterChips from '../components/FilterChips';
 import GameCard from '../components/GameCard';
@@ -8,10 +8,8 @@ import ScreenHeader from '../components/ScreenHeader';
 const FILTERS = ['Todos', 'Instalados', 'Recentes', 'Favoritos'];
 
 export default function LibraryScreen({ navigation }) {
-  const { width } = useWindowDimensions();
   const { colors, games } = useApp();
   const [filter, setFilter] = useState('Todos');
-  const cardWidth = (width - 16 * 2 - 12) / 2;
 
   const filtered = useMemo(() => {
     if (filter === 'Instalados') return games.filter((game) => game.installed);
@@ -28,10 +26,10 @@ export default function LibraryScreen({ navigation }) {
       <FilterChips options={FILTERS} selected={filter} onSelect={setFilter} />
       <ScrollView contentContainerStyle={styles.grid} showsVerticalScrollIndicator={false}>
         {filtered.map((game) => (
-          <View key={game.id} style={{ width: cardWidth }}>
+          <View key={game.id} style={styles.item}>
             <GameCard
               game={game}
-              width={cardWidth}
+              width="100%"
               onPress={() => navigation.navigate('GameDetails', { gameId: game.id })}
             />
             <Text style={[styles.status, { color: colors.textMuted }]}>
@@ -49,11 +47,16 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   grid: {
-    padding: 16,
+    paddingHorizontal: 16,
+    paddingTop: 12,
+    paddingBottom: 24,
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    gap: 14,
+  },
+  item: {
+    width: '48%',
+    marginBottom: 14,
   },
   status: {
     marginTop: 6,

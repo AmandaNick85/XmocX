@@ -5,7 +5,12 @@ export default function FilterChips({ options, selected, onSelect }) {
   const { colors } = useApp();
 
   return (
-    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.row}>
+    <ScrollView
+      horizontal
+      showsHorizontalScrollIndicator={false}
+      style={styles.scroller}
+      contentContainerStyle={styles.row}
+    >
       {options.map((option) => {
         const active = option === selected;
         return (
@@ -28,14 +33,22 @@ export default function FilterChips({ options, selected, onSelect }) {
 }
 
 const styles = StyleSheet.create({
+  scroller: {
+    flexGrow: 0,
+    minHeight: 44,
+    marginBottom: 4,
+  },
   row: {
     paddingHorizontal: 16,
+    alignItems: 'center',
     gap: 8,
   },
   chip: {
+    minHeight: 36,
     borderRadius: 999,
     paddingHorizontal: 14,
     paddingVertical: 8,
+    justifyContent: 'center',
   },
   label: {
     fontSize: 13,
