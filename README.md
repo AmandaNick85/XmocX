@@ -2,9 +2,9 @@
 
 Aplicativo mobile mockado de uma plataforma de games.
 
-Este repositório começa vazio de código. O app será construído em etapas, com commits pequenos, até um protótipo navegável em React Native + Expo.
+Protótipo educacional inspirado na organização de aplicativos de console (início, biblioteca, comunidade, conquistas e perfil), com identidade visual própria chamada **XmocX**.
 
-**Projeto educacional / mockup.** Todos os dados são fictícios. Não há backend, autenticação real, banco de dados ou APIs externas. A identidade visual é própria (XmocX) e apenas se inspira na organização de aplicativos de console.
+Todos os jogos, pessoas, conquistas e atividades são fictícios. Não há backend, banco de dados, autenticação real ou chamadas para APIs externas.
 
 ## Tecnologias
 
@@ -12,17 +12,8 @@ Este repositório começa vazio de código. O app será construído em etapas, c
 - Expo
 - JavaScript
 - React Navigation
-
-## Plano de implementação
-
-1. Criar o projeto Expo em JavaScript (`blank`).
-2. Definir paleta, tema e pastas `src/` e `assets/`.
-3. Adicionar dados mockados (`games`, `users`, `achievements`, `activities`).
-4. Criar componentes reutilizáveis (cards, avatar, barra de progresso, busca).
-5. Montar a navegação inferior (Início, Biblioteca, Comunidade, Conquistas, Perfil).
-6. Implementar as telas principais e os fluxos de detalhe, pesquisa e configurações.
-7. Adicionar animações leves, favoritos locais e ajustes de layout.
-8. Validar com `npm install` e `npx expo start`.
+- Expo Vector Icons
+- AsyncStorage (apenas para favoritos, lista e tema)
 
 ## Instalação
 
@@ -35,3 +26,19 @@ npm install
 ```bash
 npx expo start
 ```
+
+Depois abra o app no Expo Go (Android/iOS) ou em um emulador.
+
+## O que o app faz
+
+- Navegar entre Início, Biblioteca, Comunidade, Conquistas e Perfil
+- Pesquisar jogos, pessoas e conquistas localmente
+- Abrir detalhes de um jogo
+- Ver progresso, horas jogadas e conquistas
+- Ver amigos online e o feed de atividades
+- Abrir perfil e configurações
+- Favoritar jogos e adicionar à lista (persistido no aparelho)
+
+## Identidade visual
+
+Fundo preto, superfícies cinza-escuro e destaque verde neon (`#8BF000`). As capas dos jogos são artes genéricas em gradiente — nenhuma arte oficial de Xbox ou de jogos comerciais é utilizada.
