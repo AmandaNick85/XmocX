@@ -19,8 +19,9 @@ export default function HomeScreen({ navigation }) {
   const continuePlaying = [1, 6, 11, 7].map(byId).filter(Boolean);
   const recent = games.filter((game) => game.recommended).slice(0, 8);
   const activeFriends = friends.filter((user) => user.status === 'online');
-  const tile = (width - 32 - 16) / 3;
-  const libTile = (width - 32 - 8) / 2;
+  const tile = Math.round((width - 32 - 10) / 2.25);
+  const libTile = Math.round((width - 32 - 10) / 2);
+  const eventCover = Math.round((width - 32 - 36 - 20) / 3);
 
   return (
     <View style={[styles.screen, { backgroundColor: colors.background }]}>
@@ -69,15 +70,16 @@ export default function HomeScreen({ navigation }) {
           onPress={() => navigation.navigate('GameDetails', { gameId: hero.id })}
           style={styles.eventCard}
         >
-          <LinearGradient colors={['#D7E3C4', '#8FA87A', '#2A3A22']} style={styles.eventArt}>
-            <Text style={styles.eventMark}>XmocX</Text>
+          <View style={styles.eventArt}>
             <View style={styles.eventCovers}>
               {featured.map((game) => (
-                <GameCover key={game.id} game={game} compact style={styles.eventCover} />
+                <View key={game.id} style={[styles.eventFrame, { width: eventCover, height: eventCover }]}>
+                  <GameCover game={game} style={styles.eventCoverFill} />
+                </View>
               ))}
             </View>
-          </LinearGradient>
-          <View style={[styles.eventBody, { backgroundColor: 'rgba(20,20,20,0.55)' }]}>
+          </View>
+          <View style={styles.eventBody}>
             <Text style={styles.eventTitle}>Destaques da semana</Text>
             <Text style={styles.eventSub}>Veja os jogos</Text>
           </View>
@@ -181,35 +183,34 @@ const styles = StyleSheet.create({
   eventCard: {
     marginHorizontal: 16,
     marginBottom: 24,
-    borderRadius: 18,
+    borderRadius: 16,
     overflow: 'hidden',
+    backgroundColor: '#1C1C1C',
   },
   eventArt: {
-    height: 250,
-    padding: 18,
-    justifyContent: 'space-between',
-  },
-  eventMark: {
-    alignSelf: 'center',
-    marginTop: 8,
-    color: '#24351A',
-    fontSize: 42,
-    fontWeight: '900',
-    letterSpacing: 1,
+    paddingTop: 16,
+    paddingHorizontal: 12,
+    paddingBottom: 12,
+    backgroundColor: '#171717',
   },
   eventCovers: {
     flexDirection: 'row',
-    justifyContent: 'center',
-    gap: 8,
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
-  eventCover: {
-    width: 86,
-    height: 86,
-    borderRadius: 8,
+  eventFrame: {
+    borderRadius: 10,
+    overflow: 'hidden',
+    backgroundColor: '#0F0F0F',
+  },
+  eventCoverFill: {
+    width: '100%',
+    height: '100%',
   },
   eventBody: {
     paddingHorizontal: 16,
-    paddingVertical: 14,
+    paddingTop: 12,
+    paddingBottom: 16,
   },
   eventTitle: {
     color: '#FFFFFF',
@@ -238,13 +239,13 @@ const styles = StyleSheet.create({
   hList: {
     paddingHorizontal: 16,
     paddingBottom: 22,
-    gap: 8,
+    gap: 10,
   },
   grid: {
     paddingHorizontal: 16,
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    rowGap: 8,
+    rowGap: 10,
   },
 });

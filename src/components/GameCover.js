@@ -8,9 +8,9 @@ export default function GameCover({ game, style, showTitle = false }) {
   return (
     <View style={[styles.cover, style]}>
       {cover ? (
-        <Image source={cover} style={StyleSheet.absoluteFill} resizeMode="cover" />
+        <Image source={cover} style={styles.image} resizeMode="cover" />
       ) : (
-        <LinearGradient colors={game.coverColors} style={StyleSheet.absoluteFill} />
+        <LinearGradient colors={game.coverColors} style={styles.image} />
       )}
       {showTitle ? (
         <View style={styles.titleWrap}>
@@ -28,11 +28,14 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     backgroundColor: '#151515',
   },
+  image: {
+    width: '100%',
+    height: '100%',
+  },
   titleWrap: {
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'flex-end',
     padding: 10,
-    backgroundColor: 'rgba(0,0,0,0.15)',
   },
   title: {
     color: '#FFFFFF',

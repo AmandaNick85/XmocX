@@ -4,7 +4,7 @@ import { useApp } from '../context/AppContext';
 import { usePressScale } from '../utils/usePressScale';
 import GameCover from './GameCover';
 
-export default function CoverTile({ game, onPress, width, radius = 8 }) {
+export default function CoverTile({ game, onPress, width, radius = 10 }) {
   const { colors } = useApp();
   const { scale, onPressIn, onPressOut } = usePressScale(0.97);
   const numeric = typeof width === 'number';
