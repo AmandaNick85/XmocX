@@ -19,9 +19,8 @@ export default function HomeScreen({ navigation }) {
   const continuePlaying = [1, 6, 11, 7].map(byId).filter(Boolean);
   const recent = games.filter((game) => game.recommended).slice(0, 8);
   const activeFriends = friends.filter((user) => user.status === 'online');
-  const tile = Math.round((width - 32 - 10) / 2.25);
-  const libTile = Math.round((width - 32 - 10) / 2);
-  const eventCover = Math.round((width - 32 - 36 - 20) / 3);
+  const tile = (width - 32 - 16) / 3;
+  const libTile = (width - 32 - 8) / 2;
 
   return (
     <View style={[styles.screen, { backgroundColor: colors.background }]}>
@@ -73,7 +72,7 @@ export default function HomeScreen({ navigation }) {
           <View style={styles.eventArt}>
             <View style={styles.eventCovers}>
               {featured.map((game) => (
-                <View key={game.id} style={[styles.eventFrame, { width: eventCover, height: eventCover }]}>
+                <View key={game.id} style={styles.eventFrame}>
                   <GameCover game={game} style={styles.eventCoverFill} />
                 </View>
               ))}
@@ -195,11 +194,14 @@ const styles = StyleSheet.create({
   },
   eventCovers: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
+    gap: 8,
   },
   eventFrame: {
-    borderRadius: 10,
+    width: 86,
+    height: 86,
+    borderRadius: 8,
     overflow: 'hidden',
     backgroundColor: '#0F0F0F',
   },
@@ -239,13 +241,13 @@ const styles = StyleSheet.create({
   hList: {
     paddingHorizontal: 16,
     paddingBottom: 22,
-    gap: 10,
+    gap: 8,
   },
   grid: {
     paddingHorizontal: 16,
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
-    rowGap: 10,
+    rowGap: 8,
   },
 });
