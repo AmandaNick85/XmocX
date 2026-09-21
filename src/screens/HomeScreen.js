@@ -13,9 +13,10 @@ import UserAvatar from '../components/UserAvatar';
 export default function HomeScreen({ navigation }) {
   const { width } = useWindowDimensions();
   const { colors, games } = useApp();
-  const featured = games.filter((game) => game.featured).slice(0, 3);
+  const byId = (id) => games.find((game) => game.id === id);
+  const featured = [1, 6, 11].map(byId).filter(Boolean);
   const hero = featured[0] || games[0];
-  const continuePlaying = games.filter((game) => game.inContinue);
+  const continuePlaying = [1, 6, 11, 7].map(byId).filter(Boolean);
   const recent = games.filter((game) => game.recommended).slice(0, 8);
   const activeFriends = friends.filter((user) => user.status === 'online');
   const tile = (width - 32 - 16) / 3;
